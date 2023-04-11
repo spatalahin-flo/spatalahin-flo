@@ -29,6 +29,7 @@ jobs:
         run: newman run ./tests/123.json
         
   test2:
+    needs: test1
     name: Run Backend API Validation Tests#2
     if: always()
     runs-on: ubuntu-latest
