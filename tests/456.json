@@ -1,0 +1,465 @@
+{
+	"info": {
+		"_postman_id": "466bfe2a-1e2c-4e9d-908d-16e6175b0268",
+		"name": "Positive (part 1) Copy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15182028"
+	},
+	"item": [
+		{
+			"name": "[Pin Code]",
+			"item": [
+				{
+					"name": "Verify Pin Code",
+					"item": [
+						{
+							"name": "[Pin Code] Verify Pin Code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Check user_id\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{apiURL}}pin/verify/{{UserID}}/010101",
+									"host": [
+										"{{apiURL}}pin"
+									],
+									"path": [
+										"verify",
+										"{{UserID}}",
+										"010101"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Update Pin Code",
+					"item": [
+						{
+							"name": "[Pin Code] Update Pin Code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Check user_id\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"current_pin_code\": \"010101\",\n    \"pin_code\": \"050505\",\n    \"pin_code_confirm\": \"050505\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiURL}}pin/{{UserID}}",
+									"host": [
+										"{{apiURL}}pin"
+									],
+									"path": [
+										"{{UserID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Pin Code] Verify Pin Code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Check user_id\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{apiURL}}pin/verify/{{UserID}}/050505",
+									"host": [
+										"{{apiURL}}pin"
+									],
+									"path": [
+										"verify",
+										"{{UserID}}",
+										"050505"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Reset Pin Code",
+					"item": [
+						{
+							"name": "[Pin Code] Reset Pin Code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Check user_id\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"pin_code\": \"010101\",\n  \"pin_code_confirm\": \"010101\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiURL}}pin/reset/{{UserID}}",
+									"host": [
+										"{{apiURL}}pin"
+									],
+									"path": [
+										"reset",
+										"{{UserID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Pin Code] Verify Pin Code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"pm.test(\"Check user_id\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{apiURL}}pin/verify/{{UserID}}/010101",
+									"host": [
+										"{{apiURL}}pin"
+									],
+									"path": [
+										"verify",
+										"{{UserID}}",
+										"010101"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get Pin Code Status",
+					"item": [
+						{
+							"name": "[Pin Code] Get Pin Code Status",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Status is true\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.status).to.eql(true);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{apiURL}}pin/status/{{UserID}}",
+									"host": [
+										"{{apiURL}}pin"
+									],
+									"path": [
+										"status",
+										"{{UserID}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "J2U6Zgg8Og3WEHv14oZOxKAwycPOyq28sV6kPGW0",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "x-api-key",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "apiURL",
+			"value": "https://api.dev.jawudi.net/api/v1/",
+			"type": "string"
+		},
+		{
+			"key": "phone_number",
+			"value": "+17735723264",
+			"type": "string"
+		},
+		{
+			"key": "phone_number2",
+			"value": "+19862028392",
+			"type": "string"
+		},
+		{
+			"key": "account_id",
+			"value": "GCD25T4ZQ5GJY5Y6DLL4LKX3SSLPW2XWHJCXKRSSJM57ONLLMPARRP3E",
+			"type": "string"
+		},
+		{
+			"key": "request_id",
+			"value": "co_107d7e1d-4bc8-4389-b5b9-310869d6a70e",
+			"type": "string"
+		},
+		{
+			"key": "UserID",
+			"value": "64340841da756466c0d21531",
+			"type": "string"
+		},
+		{
+			"key": "SenderID",
+			"value": "642fc25ada756466c0d1fb30",
+			"type": "string"
+		},
+		{
+			"key": "recipient_phone_number",
+			"value": "+17735723264"
+		},
+		{
+			"key": "recipient_phone_number2",
+			"value": "+19862028392",
+			"type": "string"
+		},
+		{
+			"key": "link_token",
+			"value": ""
+		},
+		{
+			"key": "ach_account",
+			"value": "nLg1BkAx66CxGjRRV1WktpwgRJNr87cgjPdWo",
+			"type": "string"
+		},
+		{
+			"key": "card_number",
+			"value": "4205485280254281",
+			"type": "string"
+		},
+		{
+			"key": "cashout_id",
+			"value": ""
+		},
+		{
+			"key": "confirmation_code",
+			"value": ""
+		},
+		{
+			"key": "UniqueNickname",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "UniqueMetadata",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "StartedUserBalance",
+			"value": ""
+		},
+		{
+			"key": "ExpectedUserBalance",
+			"value": ""
+		},
+		{
+			"key": "unique_recipient_first_name",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "unique_recipient_last_name",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "prepaid_account_id",
+			"value": ""
+		},
+		{
+			"key": "DistributorID",
+			"value": "US-5408516488",
+			"type": "string"
+		},
+		{
+			"key": "unique_business_name",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "PresignedDistributorsURL",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "PresignedURL",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "PT_account_id",
+			"value": "26e1aeeb-1e7f-42fa-bbfd-8f82ed9c637d",
+			"type": "string"
+		},
+		{
+			"key": "StartedDistributorPrepaidBalance",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "ExpectedDistributorPrepaidBalance",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "trans_id",
+			"value": "trans_3af943da-2ac9-4796-a5f4-9e294b467195",
+			"type": "string"
+		},
+		{
+			"key": "StartedDistributorBalance",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "ExpectedDistributorBalance",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "UserID2",
+			"value": "6433f768da756466c0411c16",
+			"type": "string"
+		},
+		{
+			"key": "ptName",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
