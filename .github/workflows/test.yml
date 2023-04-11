@@ -1,0 +1,63 @@
+name: Run Backend API Validation Tests
+
+on:
+  push
+
+jobs:
+  test1:
+    name: Run Backend API Validation Tests#1
+    if: always()
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Packages
+        run: |
+          npm install -g serverless@1.83.3 
+          npm install -g jest@26.6.3
+          npm install -g newman@5.3.2
+
+      - name: Install Package Dependencies
+        run: npm install --force
+
+      - name: Run Newman Positive Tests on Postman Collections
+        run: newman run ./tests/123.json
+        
+  test2:
+    name: Run Backend API Validation Tests#2
+    if: always()
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Packages
+        run: |
+          npm install -g serverless@1.83.3 
+          npm install -g jest@26.6.3
+          npm install -g newman@5.3.2
+
+      - name: Install Package Dependencies
+        run: npm install --force
+
+      - name: Run Newman Positive Tests on Postman Collections
+        run: newman run ./tests/456.json
