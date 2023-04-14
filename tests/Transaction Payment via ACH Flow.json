@@ -1,0 +1,378 @@
+{
+	"info": {
+		"_postman_id": "288d7f14-e6b2-44ad-b52a-01ab15843c78",
+		"name": "Transaction Payment via ACH Flow",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15182028"
+	},
+	"item": [
+		{
+			"name": "Payment via ACH",
+			"item": [
+				{
+					"name": "[Transaction] Get  User Balance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"UserId is the same\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.collectionVariables.set(\"account_id\", jsonData.account_id);",
+									"",
+									"pm.collectionVariables.set(\"StartedUserBalance\", jsonData.balance);",
+									"pm.collectionVariables.set(\"ExpectedUserBalance\", parseFloat(pm.collectionVariables.get(\"StartedUserBalance\")) + 2);",
+									"",
+									"pm.collectionVariables.set('helper', function loadhelper() {",
+									"\tconst helper = {};",
+									"\tconst response = pm.response.json();",
+									"",
+									"\tfunction retry(maxRetries, sleep) {",
+									"\t\tlet retries = pm.collectionVariables.get('retries') || 0;",
+									"\t\tconsole.warn('retries used ' + retries + ' of ' + maxRetries);",
+									"",
+									"\t\tsetTimeout(function() {",
+									"\t\t}, sleep);",
+									"",
+									"\t\tif (retries >= maxRetries) {",
+									"\t\t\t// Reset variable",
+									"\t\t\tpm.collectionVariables.set('retries', 0);",
+									"\t\t\tconsole.warn('Reset retries. Failed after ' + retries);",
+									"\t\t\tpm.test('The maximum number of attempts has been reached', () => {",
+									"\t\t\t\tthrow new Error('');",
+									"\t\t\t});",
+									"\t\t\treturn;",
+									"\t\t}",
+									"",
+									"\t\tpostman.setNextRequest(pm.info.requestName);",
+									"\t\tpm.collectionVariables.set('retries', ++retries);",
+									"\t\tconsole.warn('Increase retries  ' + retries);",
+									"\t}",
+									"",
+									"",
+									"\thelper.retryStatusCheck = (maxRetries, sleep = 200) => {",
+									"\t\tconst transactionActivity = response.objects.find(element => {",
+									"\t\t\treturn element.trans_id === pm.collectionVariables.get('trans_id');",
+									"\t\t});",
+									"",
+									"\t\tconst isTransactionActivityCompleted = transactionActivity?.status === 'COMPLETED';",
+									"\t\tif (isTransactionActivityCompleted) {",
+									"\t\t\tconsole.warn('Reset retries on request Success ' + pm.collectionVariables.get('retries'));",
+									"\t\t\tpm.collectionVariables.set('retries', 0);",
+									"\t\t\treturn;",
+									"\t\t}",
+									"",
+									"\t\tretry(maxRetries, sleep);",
+									"\t};",
+									"",
+									"",
+									"\thelper.retryUserBalanceCheck = (maxRetries, sleep = 200) => {",
+									"\t\tconst isEqual = response.balance === (parseFloat(pm.collectionVariables.get('ExpectedUserBalance')));",
+									"\t\tif (isEqual) {",
+									"\t\t\tconsole.warn('Reset retries on request Success ' + pm.collectionVariables.get('retries'));",
+									"\t\t\tpm.collectionVariables.set('retries', 0);",
+									"\t\t\treturn;",
+									"\t\t}",
+									"",
+									"\t\tretry(maxRetries, sleep);",
+									"\t};",
+									"",
+									"\treturn helper;",
+									"} + '; loadhelper();');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiURL}}accounts?user_id={{UserID}}",
+							"host": [
+								"{{apiURL}}accounts"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "{{UserID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Transaction] Payment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"UserID has correct data in response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.payment_details.user_id).to.eql(pm.collectionVariables.get(\"SenderID\"));",
+									"});",
+									"",
+									"pm.test(\"ReceiverID has correct data in response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.payment_details.merchant_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+									"});",
+									"",
+									"pm.test(\"Body contains trans_id string\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"trans_id\");",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"trans_id\", jsonData.trans_id);",
+									"console.log(jsonData.trans_id)",
+									"",
+									"",
+									"setTimeout(function(){}, [15000]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"trans_type\": \"PAYMENT\",\n    \"fees_details\": {\n        \"amount\": 1,\n        \"currency_code\": \"USD\",\n        \"exchange_rate\": 1\n    },\n    \"payment_details\": {\n        \"user_id\": \"{{SenderID}}\",\n        \"merchant_id\": \"{{UserID}}\",\n        \"user_fullname\": \"string\",\n        \"amount_paid\": 2,\n        \"amount_received\": 2,\n        \"total_amount\": 3,\n        \"user_currency_code\": \"USD\",\n        \"user_country_code\": \"US\",\n        \"merchant_name\": \"string\",\n        \"merchant_currency_code\": \"USD\",\n        \"merchant_country_code\": \"US\",\n        \"exchange_rate\": 1,\n        \"payment_method_details\": {\n            \"payment_type\": \"ACH\",\n            \"payment_id\": \"{{ach_account}}\",\n            \"payment_mask\": \"string\",\n            \"payment_name\": \"string\"\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}transactions",
+							"host": [
+								"{{apiURL}}transactions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Transaction] Get Transaction Activity and Check Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const helper = eval(pm.collectionVariables.get(\"helper\"));",
+									"pm.test(\"Get Status of Transfer Transaction #2\", helper.retryStatusCheck(10, 20000));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}activity/{{UserID}}?limit=100",
+							"host": [
+								"{{apiURL}}activity"
+							],
+							"path": [
+								"{{UserID}}"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Transaction] Get User Balance After Payment ACH",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const helper = eval(pm.collectionVariables.get(\"helper\"));",
+									"pm.test(\"Get User Balance after Transfer\", helper.retryUserBalanceCheck(10, 20000));",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiURL}}accounts?user_id={{UserID}}",
+							"host": [
+								"{{apiURL}}accounts"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "{{UserID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "J2U6Zgg8Og3WEHv14oZOxKAwycPOyq28sV6kPGW0",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "x-api-key",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "apiURL",
+			"value": "https://api.dev.jawudi.net/api/v1/",
+			"type": "string"
+		},
+		{
+			"key": "account_id",
+			"value": "GCD25T4ZQ5GJY5Y6DLL4LKX3SSLPW2XWHJCXKRSSJM57ONLLMPARRP3E",
+			"type": "string"
+		},
+		{
+			"key": "UserID",
+			"value": "64340841da756466c0d21531",
+			"type": "string"
+		},
+		{
+			"key": "SenderID",
+			"value": "642fc25ada756466c0d1fb30",
+			"type": "string"
+		},
+		{
+			"key": "link_token",
+			"value": ""
+		},
+		{
+			"key": "ach_account",
+			"value": "8GLJnBWAlJHr8z9pXdzaTJXJRrwdbltZAmpD4",
+			"type": "string"
+		},
+		{
+			"key": "card_number",
+			"value": "4205485280254281",
+			"type": "string"
+		},
+		{
+			"key": "cashout_id",
+			"value": ""
+		},
+		{
+			"key": "confirmation_code",
+			"value": ""
+		},
+		{
+			"key": "StartedUserBalance",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "StartedSenderBalance",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "ExpectedUserBalance",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "ExpectedSenderBalance",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "trans_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "retries",
+			"value": "0",
+			"type": "string"
+		},
+		{
+			"key": "helper",
+			"value": ""
+		}
+	]
+}

@@ -1,0 +1,5359 @@
+{
+	"info": {
+		"_postman_id": "46771942-694e-4cad-acfc-ae2357441984",
+		"name": "Positive",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15182028"
+	},
+	"item": [
+		{
+			"name": "[Auth0]",
+			"item": [
+				{
+					"name": "[Auth0] Get User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"UserID is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.identities[0].user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}auth/user?user_id=sms%7C{{UserID}}",
+							"host": [
+								"{{apiURL}}auth"
+							],
+							"path": [
+								"user"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "sms%7C{{UserID}}"
+								},
+								{
+									"key": "phone_number",
+									"value": "%2B79064641857",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Auth0] Update User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// program to generate random strings",
+									"",
+									"const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';",
+									"",
+									"function generateString(length) {",
+									"    let result = '';",
+									"    const charactersLength = characters.length;",
+									"    for ( let i = 0; i < length; i++ ) {",
+									"        result += characters.charAt(Math.floor(Math.random() * charactersLength));",
+									"    }",
+									"",
+									"    return result;",
+									"}",
+									"",
+									"let generatedString = generateString(7)",
+									"",
+									"pm.collectionVariables.set(\"UniqueNickname\", generatedString);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Nickname is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.nickname).to.eql(pm.collectionVariables.get(\"UniqueNickname\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nickname\": \"{{UniqueNickname}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}auth/user/sms%7C{{UserID}}",
+							"host": [
+								"{{apiURL}}auth"
+							],
+							"path": [
+								"user",
+								"sms%7C{{UserID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Auth0] Update User Metadata",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// program to generate random strings",
+									"",
+									"const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';",
+									"",
+									"function generateString(length) {",
+									"    let result = '';",
+									"    const charactersLength = characters.length;",
+									"    for ( let i = 0; i < length; i++ ) {",
+									"        result += characters.charAt(Math.floor(Math.random() * charactersLength));",
+									"    }",
+									"",
+									"    return result;",
+									"}",
+									"",
+									"let generatedString = generateString(7)",
+									"",
+									"pm.collectionVariables.set(\"UniqueMetadata\", generatedString);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Metadata is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user_metadata.TestMetadata).to.eql(pm.collectionVariables.get(\"UniqueMetadata\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"TestMetadata\": \"{{UniqueMetadata}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}auth/user/sms%7C{{UserID}}/metadata",
+							"host": [
+								"{{apiURL}}auth"
+							],
+							"path": [
+								"user",
+								"sms%7C{{UserID}}",
+								"metadata"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Auth0] Get All Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response is an Array', function () { ",
+									"    pm.expect(pm.response.json()).to.be.an('array')",
+									"    });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}auth/users/",
+							"host": [
+								"{{apiURL}}auth"
+							],
+							"path": [
+								"users",
+								""
+							],
+							"query": [
+								{
+									"key": "per_page",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Auth0] Disable User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Blocked is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.blocked).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"blocked\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}auth/user/sms%7C{{UserID}}/enable",
+							"host": [
+								"{{apiURL}}auth"
+							],
+							"path": [
+								"user",
+								"sms%7C{{UserID}}",
+								"enable"
+							],
+							"query": [
+								{
+									"key": "blocked",
+									"value": "true",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Auth0] Enable User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Blocked is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.blocked).to.eql(false);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"blocked\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}auth/user/sms%7C{{UserID}}/enable",
+							"host": [
+								"{{apiURL}}auth"
+							],
+							"path": [
+								"user",
+								"sms%7C{{UserID}}",
+								"enable"
+							],
+							"query": [
+								{
+									"key": "blocked",
+									"value": "true",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[Pin Code]",
+			"item": [
+				{
+					"name": "Verify Pin Code",
+					"item": [
+						{
+							"name": "[Pin Code] Verify Pin Code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Check user_id\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{apiURL}}pin/verify/{{UserID}}/010101",
+									"host": [
+										"{{apiURL}}pin"
+									],
+									"path": [
+										"verify",
+										"{{UserID}}",
+										"010101"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Update Pin Code",
+					"item": [
+						{
+							"name": "[Pin Code] Update Pin Code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Check user_id\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"current_pin_code\": \"010101\",\n    \"pin_code\": \"050505\",\n    \"pin_code_confirm\": \"050505\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiURL}}pin/{{UserID}}",
+									"host": [
+										"{{apiURL}}pin"
+									],
+									"path": [
+										"{{UserID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Pin Code] Verify Pin Code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Check user_id\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{apiURL}}pin/verify/{{UserID}}/050505",
+									"host": [
+										"{{apiURL}}pin"
+									],
+									"path": [
+										"verify",
+										"{{UserID}}",
+										"050505"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Reset Pin Code",
+					"item": [
+						{
+							"name": "[Pin Code] Reset Pin Code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Check user_id\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"pin_code\": \"010101\",\n  \"pin_code_confirm\": \"010101\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiURL}}pin/reset/{{UserID}}",
+									"host": [
+										"{{apiURL}}pin"
+									],
+									"path": [
+										"reset",
+										"{{UserID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Pin Code] Verify Pin Code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"pm.test(\"Check user_id\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{apiURL}}pin/verify/{{UserID}}/010101",
+									"host": [
+										"{{apiURL}}pin"
+									],
+									"path": [
+										"verify",
+										"{{UserID}}",
+										"010101"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get Pin Code Status",
+					"item": [
+						{
+							"name": "[Pin Code] Get Pin Code Status",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Status is true\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.status).to.eql(true);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{apiURL}}pin/status/{{UserID}}",
+									"host": [
+										"{{apiURL}}pin"
+									],
+									"path": [
+										"status",
+										"{{UserID}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "[User Data]",
+			"item": [
+				{
+					"name": "User preferences",
+					"item": [
+						{
+							"name": "Pairwise with Change Notifications Preferences",
+							"item": [
+								{
+									"name": "[User Data] Change Notifications Preferences by User_id",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"UserID is the valid\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+													"});",
+													"",
+													"pm.test(\"transaction_profileStatus fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.email).to.eql(true);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.push).to.eql(true);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.sms).to.eql(false);",
+													"});",
+													"",
+													"pm.test(\"promotions fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.promotions.email).to.eql(true);",
+													"    pm.expect(jsonData.notification_preference.promotions.push).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.promotions.sms).to.eql(false);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"transaction_profileStatus\": {\n        \"email\": true,\n        \"push\": true,\n        \"sms\": false\n    },\n    \"promotions\": {\n        \"email\": true,\n        \"push\": false,\n        \"sms\": false\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/{{UserID}}/notifications-preferences",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"{{UserID}}",
+												"notifications-preferences"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[User Data] Change Notifications Preferences by User_id v.2",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"UserID is the valid\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+													"});",
+													"",
+													"pm.test(\"transaction_profileStatus fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.email).to.eql(true);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.push).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.sms).to.eql(true);",
+													"});",
+													"",
+													"pm.test(\"promotions fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.promotions.email).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.promotions.push).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.promotions.sms).to.eql(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"transaction_profileStatus\": {\n        \"email\": true,\n        \"push\": false,\n        \"sms\": true\n    },\n    \"promotions\": {\n        \"email\": false,\n        \"push\": false,\n        \"sms\": true\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/{{UserID}}/notifications-preferences",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"{{UserID}}",
+												"notifications-preferences"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[User Data] Change Notifications Preferences by User_id v.3",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"UserID is the valid\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+													"});",
+													"",
+													"pm.test(\"transaction_profileStatus fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.email).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.push).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.sms).to.eql(true);",
+													"});",
+													"",
+													"pm.test(\"promotions fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.promotions.email).to.eql(true);",
+													"    pm.expect(jsonData.notification_preference.promotions.push).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.promotions.sms).to.eql(false);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"transaction_profileStatus\": {\n        \"email\": false,\n        \"push\": false,\n        \"sms\": true\n    },\n    \"promotions\": {\n        \"email\": true,\n        \"push\": false,\n        \"sms\": false\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/{{UserID}}/notifications-preferences",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"{{UserID}}",
+												"notifications-preferences"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[User Data] Change Notifications Preferences by User_id v.4",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"UserID is the valid\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+													"});",
+													"",
+													"pm.test(\"transaction_profileStatus fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.email).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.push).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.sms).to.eql(false);",
+													"});",
+													"",
+													"pm.test(\"promotions fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.promotions.email).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.promotions.push).to.eql(true);",
+													"    pm.expect(jsonData.notification_preference.promotions.sms).to.eql(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"transaction_profileStatus\": {\n        \"email\": false,\n        \"push\": false,\n        \"sms\": false\n    },\n    \"promotions\": {\n        \"email\": false,\n        \"push\": true,\n        \"sms\": true\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/{{UserID}}/notifications-preferences",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"{{UserID}}",
+												"notifications-preferences"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[User Data] Change Notifications Preferences by User_id v.5",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"UserID is the valid\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+													"});",
+													"",
+													"pm.test(\"transaction_profileStatus fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.email).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.push).to.eql(true);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.sms).to.eql(true);",
+													"});",
+													"",
+													"pm.test(\"promotions fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.promotions.email).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.promotions.push).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.promotions.sms).to.eql(false);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"transaction_profileStatus\": {\n        \"email\": false,\n        \"push\": true,\n        \"sms\": true\n    },\n    \"promotions\": {\n        \"email\": false,\n        \"push\": false,\n        \"sms\": false\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/{{UserID}}/notifications-preferences",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"{{UserID}}",
+												"notifications-preferences"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[User Data] Change Notifications Preferences by User_id v.6",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"UserID is the valid\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+													"});",
+													"",
+													"pm.test(\"transaction_profileStatus fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.email).to.eql(true);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.push).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.sms).to.eql(false);",
+													"});",
+													"",
+													"pm.test(\"promotions fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.promotions.email).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.promotions.push).to.eql(true);",
+													"    pm.expect(jsonData.notification_preference.promotions.sms).to.eql(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"transaction_profileStatus\": {\n        \"email\": true,\n        \"push\": false,\n        \"sms\": false\n    },\n    \"promotions\": {\n        \"email\": false,\n        \"push\": true,\n        \"sms\": true\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/{{UserID}}/notifications-preferences",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"{{UserID}}",
+												"notifications-preferences"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[User Data] Change Notifications Preferences by User_id v.7",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"UserID is the valid\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+													"});",
+													"",
+													"pm.test(\"transaction_profileStatus fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.email).to.eql(true);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.push).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.sms).to.eql(true);",
+													"});",
+													"",
+													"pm.test(\"promotions fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.promotions.email).to.eql(true);",
+													"    pm.expect(jsonData.notification_preference.promotions.push).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.promotions.sms).to.eql(false);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"transaction_profileStatus\": {\n        \"email\": true,\n        \"push\": false,\n        \"sms\": true\n    },\n    \"promotions\": {\n        \"email\": true,\n        \"push\": false,\n        \"sms\": false\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/{{UserID}}/notifications-preferences",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"{{UserID}}",
+												"notifications-preferences"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[User Data] Change Notifications Preferences by User_id v.8",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"UserID is the valid\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+													"});",
+													"",
+													"pm.test(\"transaction_profileStatus fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.email).to.eql(true);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.push).to.eql(true);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.sms).to.eql(false);",
+													"});",
+													"",
+													"pm.test(\"promotions fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.promotions.email).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.promotions.push).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.promotions.sms).to.eql(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"transaction_profileStatus\": {\n        \"email\": true,\n        \"push\": true,\n        \"sms\": false\n    },\n    \"promotions\": {\n        \"email\": false,\n        \"push\": false,\n        \"sms\": true\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/{{UserID}}/notifications-preferences",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"{{UserID}}",
+												"notifications-preferences"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[User Data] Change Notifications Preferences by User_id v.9",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"UserID is the valid\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+													"});",
+													"",
+													"pm.test(\"transaction_profileStatus fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.email).to.eql(true);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.push).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.sms).to.eql(false);",
+													"});",
+													"",
+													"pm.test(\"promotions fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.promotions.email).to.eql(true);",
+													"    pm.expect(jsonData.notification_preference.promotions.push).to.eql(true);",
+													"    pm.expect(jsonData.notification_preference.promotions.sms).to.eql(false);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"transaction_profileStatus\": {\n        \"email\": true,\n        \"push\": false,\n        \"sms\": false\n    },\n    \"promotions\": {\n        \"email\": true,\n        \"push\": true,\n        \"sms\": false\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/{{UserID}}/notifications-preferences",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"{{UserID}}",
+												"notifications-preferences"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[User Data] Change Notifications Preferences by User_id v.10",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"UserID is the valid\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+													"});",
+													"",
+													"pm.test(\"transaction_profileStatus fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.email).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.push).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.sms).to.eql(true);",
+													"});",
+													"",
+													"pm.test(\"promotions fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.promotions.email).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.promotions.push).to.eql(true);",
+													"    pm.expect(jsonData.notification_preference.promotions.sms).to.eql(false);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"transaction_profileStatus\": {\n        \"email\": false,\n        \"push\": false,\n        \"sms\": true\n    },\n    \"promotions\": {\n        \"email\": false,\n        \"push\": true,\n        \"sms\": false\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/{{UserID}}/notifications-preferences",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"{{UserID}}",
+												"notifications-preferences"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[User Data] Change Notifications Preferences by User_id v.11",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"UserID is the valid\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+													"});",
+													"",
+													"pm.test(\"transaction_profileStatus fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.email).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.push).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.sms).to.eql(false);",
+													"});",
+													"",
+													"pm.test(\"promotions fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.promotions.email).to.eql(true);",
+													"    pm.expect(jsonData.notification_preference.promotions.push).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.promotions.sms).to.eql(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"transaction_profileStatus\": {\n        \"email\": false,\n        \"push\": false,\n        \"sms\": false\n    },\n    \"promotions\": {\n        \"email\": true,\n        \"push\": false,\n        \"sms\": true\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/{{UserID}}/notifications-preferences",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"{{UserID}}",
+												"notifications-preferences"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[User Data] Change Notifications Preferences by User_id v.12",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"UserID is the valid\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+													"});",
+													"",
+													"pm.test(\"transaction_profileStatus fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.email).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.push).to.eql(true);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.sms).to.eql(false);",
+													"});",
+													"",
+													"pm.test(\"promotions fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.promotions.email).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.promotions.push).to.eql(true);",
+													"    pm.expect(jsonData.notification_preference.promotions.sms).to.eql(false);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"transaction_profileStatus\": {\n        \"email\": false,\n        \"push\": true,\n        \"sms\": false\n    },\n    \"promotions\": {\n        \"email\": false,\n        \"push\": true,\n        \"sms\": false\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/{{UserID}}/notifications-preferences",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"{{UserID}}",
+												"notifications-preferences"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[User Data] Change Notifications Preferences by User_id v.13",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"UserID is the valid\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+													"});",
+													"",
+													"pm.test(\"transaction_profileStatus fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.email).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.push).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.sms).to.eql(true);",
+													"});",
+													"",
+													"pm.test(\"promotions fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.promotions.email).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.promotions.push).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.promotions.sms).to.eql(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"transaction_profileStatus\": {\n        \"email\": false,\n        \"push\": false,\n        \"sms\": true\n    },\n    \"promotions\": {\n        \"email\": false,\n        \"push\": false,\n        \"sms\": true\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/{{UserID}}/notifications-preferences",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"{{UserID}}",
+												"notifications-preferences"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[User Data] Change Notifications Preferences by User_id v.14",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"UserID is the valid\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+													"});",
+													"",
+													"pm.test(\"transaction_profileStatus fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.email).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.push).to.eql(true);",
+													"    pm.expect(jsonData.notification_preference.transaction_profileStatus.sms).to.eql(false);",
+													"});",
+													"",
+													"pm.test(\"promotions fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.notification_preference.promotions.email).to.eql(true);",
+													"    pm.expect(jsonData.notification_preference.promotions.push).to.eql(false);",
+													"    pm.expect(jsonData.notification_preference.promotions.sms).to.eql(false);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"transaction_profileStatus\": {\n        \"email\": false,\n        \"push\": true,\n        \"sms\": false\n    },\n    \"promotions\": {\n        \"email\": true,\n        \"push\": false,\n        \"sms\": false\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/{{UserID}}/notifications-preferences",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"{{UserID}}",
+												"notifications-preferences"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "[User Data] Get Notifications Preferences by User_id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"transaction_profileStatus fields are correct\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.transaction_profileStatus.email).to.eql(false);",
+											"    pm.expect(jsonData.transaction_profileStatus.push).to.eql(true);",
+											"    pm.expect(jsonData.transaction_profileStatus.sms).to.eql(false);",
+											"});",
+											"",
+											"pm.test(\"promotions fields are correct\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.promotions.email).to.eql(true);",
+											"    pm.expect(jsonData.promotions.push).to.eql(false);",
+											"    pm.expect(jsonData.promotions.sms).to.eql(false);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{apiURL}}user-data/{{UserID}}/notifications-preferences",
+									"host": [
+										"{{apiURL}}user-data"
+									],
+									"path": [
+										"{{UserID}}",
+										"notifications-preferences"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User Cards",
+					"item": [
+						{
+							"name": "Without optional field",
+							"item": [
+								{
+									"name": "[User Data] Add Card to User (without isDefualt)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"UserId is the valid\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+													"});",
+													"",
+													"pm.test(\"Card is created\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.card_number).to.eql(\"1234-5678-123-2222\");",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"user_id\": \"{{UserID}}\",\n  \"card_holder_name\": \"1234\",\n  \"card_number\": \"1234-5678-123-2222\",\n  \"exp_month\": \"11\",\n  \"exp_year\": \"25\",\n  \"ccv\": \"1111\",\n  \"card_type\": \"CREDIT\",\n  \"brand\": \"Visa\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/cards",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"cards"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[User Data] Remove Card from User",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"var schema = {",
+													"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+													"  \"type\": \"string\"",
+													"};",
+													"",
+													"var jsonResp = pm.response.json();",
+													"",
+													"pm.test('Schema is valid', function () {",
+													"    pm.expect(tv4.validate(jsonResp, schema)).to.be.true;",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/cards?user_id={{UserID}}&card_number=1234-5678-123-2222",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"cards"
+											],
+											"query": [
+												{
+													"key": "user_id",
+													"value": "{{UserID}}"
+												},
+												{
+													"key": "card_number",
+													"value": "1234-5678-123-2222"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "With all fields",
+							"item": [
+								{
+									"name": "[User Data] Add Card to User",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"UserId is the valid\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+													"});",
+													"",
+													"pm.test(\"Card is created\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.card_number).to.eql(\"1112223335555\");",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"user_id\": \"{{UserID}}\",\n  \"card_holder_name\": \"1234\",\n  \"card_number\": \"1112223335555\",\n  \"exp_month\": \"11\",\n  \"exp_year\": \"25\",\n  \"ccv\": \"1111\",\n  \"card_type\": \"CREDIT\",\n  \"brand\": \"Visa\",\n  \"isDefault\": false\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/cards",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"cards"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[User Data] Get User Cards by UserID",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"UserId is the valid\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+													"});",
+													"",
+													"pm.test(\"Card is updated\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.card_number).to.eql('1112223335555');",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/cards?user_id={{UserID}}&card_number=1112223335555",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"cards"
+											],
+											"query": [
+												{
+													"key": "user_id",
+													"value": "{{UserID}}"
+												},
+												{
+													"key": "card_number",
+													"value": "1112223335555"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[User Data] Remove Card from User",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"var schema = {",
+													"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+													"  \"type\": \"string\"",
+													"};",
+													"",
+													"var jsonResp = pm.response.json();",
+													"",
+													"pm.test('Schema is valid', function () {",
+													"    pm.expect(tv4.validate(jsonResp, schema)).to.be.true;",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/cards?user_id={{UserID}}&card_number=1112223335555",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"cards"
+											],
+											"query": [
+												{
+													"key": "user_id",
+													"value": "{{UserID}}"
+												},
+												{
+													"key": "card_number",
+													"value": "1112223335555"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "With different values",
+							"item": [
+								{
+									"name": "[User Data] Add Card to User (type = DEBIT)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"UserId is the valid\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+													"});",
+													"",
+													"pm.test(\"Card is created\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.card_number).to.eql(\"1111-5678-123-5555\");",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"user_id\": \"{{UserID}}\",\n  \"card_holder_name\": \"1234\",\n  \"card_number\": \"1111-5678-123-5555\",\n  \"exp_month\": \"11\",\n  \"exp_year\": \"25\",\n  \"ccv\": \"1111\",\n  \"card_type\": \"DEBIT\",\n  \"brand\": \"Visa\",\n  \"isDefault\": false\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/cards",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"cards"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[User Data] Remove Card from User",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"var schema = {",
+													"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+													"  \"type\": \"string\"",
+													"};",
+													"",
+													"var jsonResp = pm.response.json();",
+													"",
+													"pm.test('Schema is valid', function () {",
+													"    pm.expect(tv4.validate(jsonResp, schema)).to.be.true;",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/cards?user_id={{UserID}}&card_number=1111-5678-123-5555",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"cards"
+											],
+											"query": [
+												{
+													"key": "user_id",
+													"value": "{{UserID}}"
+												},
+												{
+													"key": "card_number",
+													"value": "1111-5678-123-5555"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[User Data] Add Card to User (type = CREDIT)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"UserId is the valid\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+													"});",
+													"",
+													"pm.test(\"Card is created\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.card_number).to.eql(\"3333-5678-123-5555\");",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"user_id\": \"{{UserID}}\",\n  \"card_holder_name\": \"1234\",\n  \"card_number\": \"3333-5678-123-5555\",\n  \"exp_month\": \"11\",\n  \"exp_year\": \"25\",\n  \"ccv\": \"1111\",\n  \"card_type\": \"CREDIT\",\n  \"brand\": \"Visa\",\n  \"isDefault\": false\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/cards",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"cards"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[User Data] Remove Card from User",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"var schema = {",
+													"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+													"  \"type\": \"string\"",
+													"};",
+													"",
+													"var jsonResp = pm.response.json();",
+													"",
+													"pm.test('Schema is valid', function () {",
+													"    pm.expect(tv4.validate(jsonResp, schema)).to.be.true;",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/cards?user_id={{UserID}}&card_number=3333-5678-123-5555",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"cards"
+											],
+											"query": [
+												{
+													"key": "user_id",
+													"value": "{{UserID}}"
+												},
+												{
+													"key": "card_number",
+													"value": "3333-5678-123-5555"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Device Endpoint Token",
+					"item": [
+						{
+							"name": "[User Data] Update Device Endpoint Token (FCM)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"UserID is the same\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"type\": \"FCM\",\n    \"token\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiURL}}user-data/{{UserID}}/device-endpoint-token",
+									"host": [
+										"{{apiURL}}user-data"
+									],
+									"path": [
+										"{{UserID}}",
+										"device-endpoint-token"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[User Data] Get Device Endpoint Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"UserID is the same\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.type).to.eql(\"FCM\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{apiURL}}user-data/{{UserID}}/device-endpoint-token",
+									"host": [
+										"{{apiURL}}user-data"
+									],
+									"path": [
+										"{{UserID}}",
+										"device-endpoint-token"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[User Data] Update Device Endpoint Token (APNS)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"UserID is the same\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"type\": \"APNS\",\n    \"token\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiURL}}user-data/{{UserID}}/device-endpoint-token",
+									"host": [
+										"{{apiURL}}user-data"
+									],
+									"path": [
+										"{{UserID}}",
+										"device-endpoint-token"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[User Data] Get Device Endpoint Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"UserID is the same\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.type).to.eql(\"APNS\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{apiURL}}user-data/{{UserID}}/device-endpoint-token",
+									"host": [
+										"{{apiURL}}user-data"
+									],
+									"path": [
+										"{{UserID}}",
+										"device-endpoint-token"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Security Settings",
+					"item": [
+						{
+							"name": "Update Security Settings",
+							"item": [
+								{
+									"name": "[User Data] Update Security Settings",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"UserID is the valid\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+													"});",
+													"",
+													"pm.test(\"Security settings fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.security_settings.enter_pin_to_transaction).to.eql(false);",
+													"    pm.expect(jsonData.security_settings.biometric_enable).to.eql(false);",
+													"    pm.expect(jsonData.security_settings.delay_enable).to.eql(false);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"enter_pin_to_transaction\": false,\n    \"biometric_enable\": false,\n    \"delay_enable\": false\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/{{UserID}}/security-settings",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"{{UserID}}",
+												"security-settings"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[User Data] Update Security Settings v.2",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"UserID is the valid\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+													"});",
+													"",
+													"pm.test(\"Security settings fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.security_settings.enter_pin_to_transaction).to.eql(false);",
+													"    pm.expect(jsonData.security_settings.biometric_enable).to.eql(false);",
+													"    pm.expect(jsonData.security_settings.delay_enable).to.eql(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"delay_enable\": true\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/{{UserID}}/security-settings",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"{{UserID}}",
+												"security-settings"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[User Data] Update Security Settings v.3",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"UserID is the valid\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+													"});",
+													"",
+													"pm.test(\"Security settings fields are correct\", function () {",
+													"    var jsonData = pm.response.json();",
+													"    pm.expect(jsonData.security_settings.enter_pin_to_transaction).to.eql(false);",
+													"    pm.expect(jsonData.security_settings.biometric_enable).to.eql(true);",
+													"    pm.expect(jsonData.security_settings.delay_enable).to.eql(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"biometric_enable\": true,\n    \"delay_enable\": true\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{apiURL}}user-data/{{UserID}}/security-settings",
+											"host": [
+												"{{apiURL}}user-data"
+											],
+											"path": [
+												"{{UserID}}",
+												"security-settings"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "[User Data] Get Security Settings",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Security settings fields are correct\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.enter_pin_to_transaction).to.eql(false);",
+											"    pm.expect(jsonData.biometric_enable).to.eql(true);",
+											"    pm.expect(jsonData.delay_enable).to.eql(true);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{apiURL}}user-data/{{UserID}}/security-settings",
+									"host": [
+										"{{apiURL}}user-data"
+									],
+									"path": [
+										"{{UserID}}",
+										"security-settings"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "[User Data] Get User Data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"User is the same\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{apiURL}}user-data/{{UserID}}",
+							"host": [
+								"{{apiURL}}user-data"
+							],
+							"path": [
+								"{{UserID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[Identity verification]",
+			"item": [
+				{
+					"name": "[Identity verification] Get Identity Verification Status for User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"UserID is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}identity-verification/{{UserID}}",
+							"host": [
+								"{{apiURL}}identity-verification"
+							],
+							"path": [
+								"{{UserID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[Account]",
+			"item": [
+				{
+					"name": "[Account] Get Account Balance by user_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"UserId is the same\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"account_id\", jsonData.account_id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiURL}}accounts?user_id={{UserID}}",
+							"host": [
+								"{{apiURL}}accounts"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "{{UserID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Account] Get Account Balance by account_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"UserId is the same\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.account_id).to.eql(pm.collectionVariables.get(\"account_id\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiURL}}accounts?account_id={{account_id}}",
+							"host": [
+								"{{apiURL}}accounts"
+							],
+							"query": [
+								{
+									"key": "account_id",
+									"value": "{{account_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Account] Change Currency by account_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}accounts/{{account_id}}?country_code=US",
+							"host": [
+								"{{apiURL}}accounts"
+							],
+							"path": [
+								"{{account_id}}"
+							],
+							"query": [
+								{
+									"key": "country_code",
+									"value": "US"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Account] Get User Currency by user_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"currency_code is USD\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.currency_code).to.eql(\"USD\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}accounts/currency/{{UserID}}",
+							"host": [
+								"{{apiURL}}accounts"
+							],
+							"path": [
+								"currency",
+								"{{UserID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[User Profile]",
+			"item": [
+				{
+					"name": "[User Profile] Is the Jawudi User?",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Phone and UserID is valid\", function () {",
+									"    var jsonData = pm.response.json()",
+									"    pm.expect(jsonData.phone_number).to.eql(pm.collectionVariables.get('phone_number'));",
+									"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phone_number\": \"+17735723264\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}user-profile/check-user",
+							"host": [
+								"{{apiURL}}user-profile"
+							],
+							"path": [
+								"check-user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[User Profile] Are these Jawudi Users?",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"First Phone_Number is the same and status false\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[0].phone_number).to.eql(pm.collectionVariables.get(\"phone_number\"));",
+									"    pm.expect(jsonData[0].jawudi_user).to.eql(true)",
+									"});",
+									"",
+									"pm.test(\"Second Phone_Number is the same and status true\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[1].phone_number).to.eql(pm.collectionVariables.get(\"phone_number2\"));",
+									"    pm.expect(jsonData[1].jawudi_user).to.eql(true)",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    \"+17735723264\",\n    \"{{phone_number2}}\"\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}user-profile/check-users",
+							"host": [
+								"{{apiURL}}user-profile"
+							],
+							"path": [
+								"check-users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[User Profile] Get User Attributes by Email or Phone Number",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"UserID is the same\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.identities[0].user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}user-profile?user_id={{UserID}}",
+							"host": [
+								"{{apiURL}}user-profile"
+							],
+							"query": [
+								{
+									"key": "phone_number",
+									"value": "%2B17242450019",
+									"disabled": true
+								},
+								{
+									"key": "email",
+									"value": "TestUpatedStas%40gmail.com",
+									"disabled": true
+								},
+								{
+									"key": "user_id",
+									"value": "{{UserID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[User Profile] Create Presigned Link for Profile Image",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"PresignedURL\", jsonData);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user_id\": \"{{UserID}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}user-profile/image",
+							"host": [
+								"{{apiURL}}user-profile"
+							],
+							"path": [
+								"image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[User Profile] Create Profile Image",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": "./tests/Test.jpg"
+							}
+						},
+						"url": {
+							"raw": "{{PresignedURL}}",
+							"host": [
+								"{{PresignedURL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[User Profile] Get Profile Image",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}user-profile/image?user_id={{UserID}}",
+							"host": [
+								"{{apiURL}}user-profile"
+							],
+							"path": [
+								"image"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "{{UserID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[User Profile] Delete Profile Image",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}user-profile/image?user_id={{UserID}}",
+							"host": [
+								"{{apiURL}}user-profile"
+							],
+							"path": [
+								"image"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "{{UserID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[Distributors]",
+			"item": [
+				{
+					"name": "[Distributors] Get Distributors By Params",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"    var jsonData = pm.response.json();",
+									"pm.test(\"distributor_id and user_id is valid\", function () {",
+									"    pm.collectionVariables.set(\"DistributorID\", jsonData.objects[0].distributor_id);",
+									"    pm.expect(jsonData.objects[0].distributor_id).to.eql(pm.collectionVariables.get(\"DistributorID\"))",
+									"    pm.expect(jsonData.objects[0].user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}distributors?user_id={{UserID}}",
+							"host": [
+								"{{apiURL}}distributors"
+							],
+							"query": [
+								{
+									"key": "country_code",
+									"value": "US",
+									"disabled": true
+								},
+								{
+									"key": "account_id",
+									"value": "GAFTJSNYRNOQQDD2FZJKVY3XPPE7L5HD3BNKMN7ZSV7PV7JYEJ3GNB5H",
+									"disabled": true
+								},
+								{
+									"key": "user_id",
+									"value": "{{UserID}}"
+								},
+								{
+									"key": "limit",
+									"value": "100",
+									"disabled": true
+								},
+								{
+									"key": "last_key",
+									"value": "%7B%22country_code%22%3A%22US%22%2C%22distributor_id%22%3A%22US-9609468088%22%7D",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Distributors] Load Wallet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"distributor_id\": \"{{DistributorID}}\",\n    \"amount\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}distributors/load-prepaid-balance",
+							"host": [
+								"{{apiURL}}distributors"
+							],
+							"path": [
+								"load-prepaid-balance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Distributors] Get Distributor By distributor_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"distributor_id and user_id is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.distributor_id).to.eql(pm.collectionVariables.get(\"DistributorID\"));",
+									"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}distributors/{{DistributorID}}",
+							"host": [
+								"{{apiURL}}distributors"
+							],
+							"path": [
+								"{{DistributorID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Distributors] Get all Distributors",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}distributors/all",
+							"host": [
+								"{{apiURL}}distributors"
+							],
+							"path": [
+								"all"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20",
+									"disabled": true
+								},
+								{
+									"key": "lastKey",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Distributors] Update Distributor Data By ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Nickname is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.business_name).to.eql(pm.collectionVariables.get(\"unique_business_name\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// program to generate random strings",
+									"",
+									"const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';",
+									"",
+									"function generateString(length) {",
+									"    let result = '';",
+									"    const charactersLength = characters.length;",
+									"    for ( let i = 0; i < length; i++ ) {",
+									"        result += characters.charAt(Math.floor(Math.random() * charactersLength));",
+									"    }",
+									"",
+									"    return result;",
+									"}",
+									"",
+									"let generatedString = generateString(7)",
+									"",
+									"pm.collectionVariables.set(\"unique_business_name\", generatedString);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"business_name\": \"{{unique_business_name}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}distributors/{{DistributorID}}",
+							"host": [
+								"{{apiURL}}distributors"
+							],
+							"path": [
+								"{{DistributorID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Distributors] Update Distributor Score",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response is an number', function () { ",
+									"    pm.expect(pm.response.json()).to.be.an('number')",
+									"    });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"score\": 5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}distributors/{{DistributorID}}/score",
+							"host": [
+								"{{apiURL}}distributors"
+							],
+							"path": [
+								"{{DistributorID}}",
+								"score"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Distributors] Get Distributor Commissions Activities",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response is an Object', function () { ",
+									"    pm.expect(pm.response.json()).to.be.an('object')",
+									"    });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}distributors/{{DistributorID}}/commissions?limit=100",
+							"host": [
+								"{{apiURL}}distributors"
+							],
+							"path": [
+								"{{DistributorID}}",
+								"commissions"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Distributors] Withdraw Commission Balance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"distributor_id is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.distributor_id).to.eql(pm.collectionVariables.get(\"DistributorID\"));",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}distributors/{{DistributorID}}/withdraw",
+							"host": [
+								"{{apiURL}}distributors"
+							],
+							"path": [
+								"{{DistributorID}}",
+								"withdraw"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Distributors] Put Presigned S3 Url",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"PresignedDistributorsURL\", jsonData);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}distributors/{{DistributorID}}/documents?filename=Test.jpeg&operation=put",
+							"host": [
+								"{{apiURL}}distributors"
+							],
+							"path": [
+								"{{DistributorID}}",
+								"documents"
+							],
+							"query": [
+								{
+									"key": "filename",
+									"value": "Test.jpeg"
+								},
+								{
+									"key": "operation",
+									"value": "put"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Distributors] Upload Document",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": "./tests/Test.jpg"
+							}
+						},
+						"url": {
+							"raw": "{{PresignedDistributorsURL}}",
+							"host": [
+								"{{PresignedDistributorsURL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Distributors] Get Presigned S3 Url",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}distributors/{{DistributorID}}/documents?filename=Test.jpeg&operation=get",
+							"host": [
+								"{{apiURL}}distributors"
+							],
+							"path": [
+								"{{DistributorID}}",
+								"documents"
+							],
+							"query": [
+								{
+									"key": "filename",
+									"value": "Test.jpeg"
+								},
+								{
+									"key": "operation",
+									"value": "get"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Distributors] Remove Document",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}distributors/{{DistributorID}}/documents?filename=Test.jpeg",
+							"host": [
+								"{{apiURL}}distributors"
+							],
+							"path": [
+								"{{DistributorID}}",
+								"documents"
+							],
+							"query": [
+								{
+									"key": "filename",
+									"value": "Test.jpeg"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[Subscriptions]",
+			"item": [
+				{
+					"name": "[Subscription] Get Subscription Tiers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response is an Array', function () { ",
+									"    pm.expect(pm.response.json()).to.be.an('array')",
+									"    });",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}subscriptions",
+							"host": [
+								"{{apiURL}}subscriptions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Subscription] Get User Subscription",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"UserId is the same\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+									"});",
+									"",
+									"pm.test(\"tier_name is the same\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.tier_name).to.eql(\"Pay As Go\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}subscriptions/{{UserID}}",
+							"host": [
+								"{{apiURL}}subscriptions"
+							],
+							"path": [
+								"{{UserID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Subscription] Update Subscription",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"setTimeout(function(){}, [15000]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tier_name\": \"Silver\",\n    \"payment_details\": {\n        \"payment_type\": \"ACH\",\n        \"payment_id\": \"{{ach_account}}\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}subscriptions/{{UserID}}",
+							"host": [
+								"{{apiURL}}subscriptions"
+							],
+							"path": [
+								"{{UserID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Subscription] Get User Subscription",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"UserId is the same\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+									"});",
+									"",
+									"pm.test(\"tier_name is Silver and status Complited\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.tier_name).to.eql(\"Silver\");",
+									"    pm.expect(jsonData.upgrade_status).to.eql(\"COMPLETED\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}subscriptions/{{UserID}}",
+							"host": [
+								"{{apiURL}}subscriptions"
+							],
+							"path": [
+								"{{UserID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Subscription] Cancel Subscription",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"UserId is the same\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+									"});",
+									"",
+									"pm.test(\"tier_name is the same\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.tier_name).to.eql(\"Pay As Go\");",
+									"    pm.expect(jsonData.upgrade_status).to.eql(\"COMPLETED\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}subscriptions/{{UserID}}",
+							"host": [
+								"{{apiURL}}subscriptions"
+							],
+							"path": [
+								"{{UserID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[Requests]",
+			"item": [
+				{
+					"name": "[Requests] Create Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Requester is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.requester_id).to.eql(pm.collectionVariables.get(\"SenderID\"));",
+									"});",
+									"",
+									"pm.test(\"Receiver is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.receiver_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+									"});",
+									"",
+									"pm.test(\"Status is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql(\"PENDING\");",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"request_id\", jsonData.request_id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"requester_id\": \"{{SenderID}}\",\n    \"receiver_id\": \"{{UserID}}\",\n    \"details\": {\n        \"requested_amount\": 4,\n        \"received_amount\": 4,\n        \"exchange_rate\": 1,\n        \"requester_currency_code\": \"USD\",\n        \"requester_country_code\": \"US\",\n        \"receiver_currency_code\": \"USD\",\n        \"receiver_country_code\": \"US\",\n        \"requester_name\": \"string\",\n        \"receiver_name\": \"string\",\n        \"note\": \"string\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}requests",
+							"host": [
+								"{{apiURL}}requests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Requests] Create Request (without note)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Requester is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.requester_id).to.eql(pm.collectionVariables.get(\"SenderID\"));",
+									"});",
+									"",
+									"pm.test(\"Receiver is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.receiver_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+									"});",
+									"",
+									"pm.test(\"Status is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql(\"PENDING\");",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"request_id\", jsonData.request_id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"requester_id\": \"{{SenderID}}\",\n    \"receiver_id\": \"{{UserID}}\",\n    \"details\": {\n        \"requested_amount\": 1000,\n        \"received_amount\": 150,\n        \"exchange_rate\": 1,\n        \"requester_currency_code\": \"USD\",\n        \"requester_country_code\": \"US\",\n        \"receiver_currency_code\": \"USD\",\n        \"receiver_country_code\": \"US\",\n        \"requester_name\": \"string\",\n        \"receiver_name\": \"string\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}requests",
+							"host": [
+								"{{apiURL}}requests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Requests] Reminder",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}requests/{{request_id}}",
+							"host": [
+								"{{apiURL}}requests"
+							],
+							"path": [
+								"{{request_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Requests] Get Request by request_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Request_id is the same\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.request_id).to.eql(pm.collectionVariables.get(\"request_id\"));",
+									"});",
+									"",
+									"pm.test(\"Status is pending\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql(\"PENDING\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}requests/{{request_id}}",
+							"host": [
+								"{{apiURL}}requests"
+							],
+							"path": [
+								"{{request_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Requests] Get Pending Request by requester_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Requester is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.objects[0].requester_id).to.eql(pm.collectionVariables.get(\"SenderID\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}users/{{SenderID}}/requests/sender?limit=3&last_key",
+							"host": [
+								"{{apiURL}}users"
+							],
+							"path": [
+								"{{SenderID}}",
+								"requests",
+								"sender"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "3"
+								},
+								{
+									"key": "last_key",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Requests] Get Pending Request by receiver_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Receiver is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.objects[0].receiver_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}users/{{UserID}}/requests/receiver?limit=100&last_key",
+							"host": [
+								"{{apiURL}}users"
+							],
+							"path": [
+								"{{UserID}}",
+								"requests",
+								"receiver"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "100"
+								},
+								{
+									"key": "last_key",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Requests] Update Request Status by request id (Expired)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql(\"EXPIRED\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"EXPIRED\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}requests/{{request_id}}/status",
+							"host": [
+								"{{apiURL}}requests"
+							],
+							"path": [
+								"{{request_id}}",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Requests] Update Request Status by request id (Completed)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql(\"COMPLETED\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"COMPLETED\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}requests/{{request_id}}/status",
+							"host": [
+								"{{apiURL}}requests"
+							],
+							"path": [
+								"{{request_id}}",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Requests] Update Request Status by request id (Canceled)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql(\"CANCELED\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"CANCELED\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}requests/{{request_id}}/status",
+							"host": [
+								"{{apiURL}}requests"
+							],
+							"path": [
+								"{{request_id}}",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Requests] Update Request Status by request id (Declined)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql(\"DECLINED\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"DECLINED\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}requests/{{request_id}}/status",
+							"host": [
+								"{{apiURL}}requests"
+							],
+							"path": [
+								"{{request_id}}",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Requests] Get Requests History",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}users/{{UserID}}/requests-history?limit=4&last_key=%7B%22requester_key%22%3Anull%2C%22receiver_key%22%3A%7B%22receiver_id%22%3A%2264340841da756466c0d21531%22%2C%22request_id%22%3A%22jaw_2da41174-9caf-4bba-a4e0-9944f386de40%22%2C%22status%22%3A%22PENDING%22%7D%7D",
+							"host": [
+								"{{apiURL}}users"
+							],
+							"path": [
+								"{{UserID}}",
+								"requests-history"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "4"
+								},
+								{
+									"key": "last_key",
+									"value": "%7B%22requester_key%22%3Anull%2C%22receiver_key%22%3A%7B%22receiver_id%22%3A%2264340841da756466c0d21531%22%2C%22request_id%22%3A%22jaw_2da41174-9caf-4bba-a4e0-9944f386de40%22%2C%22status%22%3A%22PENDING%22%7D%7D"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[Recipients]",
+			"item": [
+				{
+					"name": "[RECIPIENTS] Add Recipient",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"UserID is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+									"});",
+									"",
+									"pm.test(\"recipient_phone_number is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.recipient_phone_number).to.eql(pm.collectionVariables.get(\"recipient_phone_number2\"));",
+									"});",
+									"",
+									"pm.test(\"recipient_first_name is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.recipient_first_name).to.eql(\"Test\");",
+									"});",
+									"",
+									"pm.test(\"recipient_last_name is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.recipient_last_name).to.eql(\"For\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"{{UserID}}\",\n    \"recipient_phone_number\": \"{{recipient_phone_number2}}\",\n    \"recipient_first_name\": \"Test\",\n    \"recipient_last_name\": \"For\",\n    \"recipient_country_name\": \"United States\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}recipient/",
+							"host": [
+								"{{apiURL}}recipient"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RECIPIENTS] Get User's Recipient",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"UserID is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+									"});",
+									"",
+									"pm.test(\"recipient_phone_number is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.recipient_phone_number).to.eql(pm.collectionVariables.get(\"recipient_phone_number2\"));",
+									"});",
+									"",
+									"pm.test(\"recipient_first_name is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.recipient_first_name).to.eql(\"Test\");",
+									"});",
+									"",
+									"pm.test(\"recipient_last_name is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.recipient_last_name).to.eql(\"For\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiURL}}recipient/{{UserID}}/{{recipient_phone_number2}}",
+							"host": [
+								"{{apiURL}}recipient"
+							],
+							"path": [
+								"{{UserID}}",
+								"{{recipient_phone_number2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RECIPIENTS] Get User's Recipients",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"UserId is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[0].user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+									"});",
+									"",
+									"",
+									"pm.test(\"recipient_phone_number is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[0].recipient_phone_number).to.eql(pm.collectionVariables.get(\"recipient_phone_number2\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiURL}}recipient/{{UserID}}",
+							"host": [
+								"{{apiURL}}recipient"
+							],
+							"path": [
+								"{{UserID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RECIPIENTS] Update Recipient Details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"UserID is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+									"});",
+									"",
+									"pm.test(\"recipient_phone_number is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.recipient_phone_number).to.eql(pm.collectionVariables.get(\"recipient_phone_number2\"));",
+									"});",
+									"",
+									"pm.test(\"recipient_first_name is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.recipient_first_name).to.eql(pm.collectionVariables.get(\"unique_recipient_first_name\"));",
+									"});",
+									"",
+									"pm.test(\"recipient_last_name is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.recipient_last_name).to.eql(pm.collectionVariables.get(\"unique_recipient_last_name\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// program to generate random strings",
+									"",
+									"const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';",
+									"",
+									"function generateString(length) {",
+									"    let result = '';",
+									"    const charactersLength = characters.length;",
+									"    for ( let i = 0; i < length; i++ ) {",
+									"        result += characters.charAt(Math.floor(Math.random() * charactersLength));",
+									"    }",
+									"",
+									"    return result;",
+									"}",
+									"",
+									"let generatedString = generateString(7)",
+									"let generatedString2 = generateString(6)",
+									"",
+									"pm.collectionVariables.set(\"unique_recipient_first_name\", generatedString);",
+									"pm.collectionVariables.set(\"unique_recipient_last_name\", generatedString2);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"{{UserID}}\",\n    \"recipient_phone_number\": \"{{recipient_phone_number2}}\",\n    \"recipient_first_name\": \"{{unique_recipient_first_name}}\",\n    \"recipient_last_name\": \"{{unique_recipient_last_name}}\",\n    \"recipient_country_name\": \"United States\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}recipient",
+							"host": [
+								"{{apiURL}}recipient"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RECIPIENTS] Delete User's Recipient",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var schema = {",
+									"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"  \"type\": \"string\"",
+									"};",
+									"",
+									"var jsonResp = pm.response.json();",
+									"",
+									"pm.test('Schema is valid', function () {",
+									"    pm.expect(tv4.validate(jsonResp, schema)).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}recipient/{{UserID}}/{{recipient_phone_number2}}",
+							"host": [
+								"{{apiURL}}recipient"
+							],
+							"path": [
+								"{{UserID}}",
+								"{{recipient_phone_number2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RECIPIENTS] Get User's Recipient after deletion",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"UserID is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.errorMessage).to.eql('[400] Bad request. Recipient not found');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiURL}}recipient/{{UserID}}/{{recipient_phone_number2}}",
+							"host": [
+								"{{apiURL}}recipient"
+							],
+							"path": [
+								"{{UserID}}",
+								"{{recipient_phone_number2}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[PLAID]",
+			"item": [
+				{
+					"name": "[PLAID] Get Institution Metadada",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"institutionId\": \"ins_127989\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}plaid/institution-metadata",
+							"host": [
+								"{{apiURL}}plaid"
+							],
+							"path": [
+								"institution-metadata"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[Waitlist]",
+			"item": [
+				{
+					"name": "[Waitlist] Join Waitlist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Country_code is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.country_code).to.eql(\"Malaysia\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"country_code\": \"Malaysia\",\n    \"phone_number\": \"{{$randomPhoneNumber}}\",\n    \"email\": \"string@test.com\",\n    \"country\": \"string\",\n    \"state\": \"string\",\n    \"firstName\": \"string\",\n    \"lastName\": \"string\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}waitlist",
+							"host": [
+								"{{apiURL}}waitlist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Waitlist] Join Waitlist (without State)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Country_code is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.country_code).to.eql(\"Malaysia\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"country_code\": \"Malaysia\",\n    \"phone_number\": \"{{$randomPhoneNumber}}\",\n    \"email\": \"string@test.com\",\n    \"country\": \"string\",\n    \"firstName\": \"string\",\n    \"lastName\": \"string\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}waitlist",
+							"host": [
+								"{{apiURL}}waitlist"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[Transactions] Calculate Fees",
+			"item": [
+				{
+					"name": "[Transactions] Calculate Transaction Fees",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"{{UserID}}\",\n    \"trans_type\": \"TRANSFER\",\n    \"payment_type\": \"JAWUDI\",\n    \"source_country_code\": \"GN\",\n    \"destination_country_code\": \"US\",\n    \"amount\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}transactions/fees",
+							"host": [
+								"{{apiURL}}transactions"
+							],
+							"path": [
+								"fees"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[PrimeTrust]",
+			"item": [
+				{
+					"name": "[PrimeTrust] Get Prime Trust Agreement Preview",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John James Doe\",\n    \"email\": \"test@gmail.com\",\n    \"sex\": \"male\",\n    \"tax-id-number\": \"123123123\",\n    \"tax-country\": \"US\",\n    \"date-of-birth\": \"1950-01-01\",\n    \"primary-phone-number\": {\n        \"country\": \"US\",\n        \"number\": \"1231231231\",\n        \"sms\": true\n    },\n    \"primary-address\": {\n        \"street-1\": \"123 MK Road\",\n        \"street-2\": \"Flat 3\",\n        \"postal-code\": \"89145\",\n        \"city\": \"Las Vegas\",\n        \"region\": \"NV\",\n        \"country\": \"US\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}primetrust/accounts/agreement-previews",
+							"host": [
+								"{{apiURL}}primetrust"
+							],
+							"path": [
+								"accounts",
+								"agreement-previews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[PrimeTrust] Get Account Details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Name is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"ptName\", jsonData.data.attributes.name);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}primetrust/accounts/{{UserID2}}",
+							"host": [
+								"{{apiURL}}primetrust"
+							],
+							"path": [
+								"accounts",
+								"{{UserID2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[PrimeTrust] Liquidity Buy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"action\": \"buy\",\n  \"accountId\": {{PT_account_id}},\n  \"amount\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}primetrust/liquidity",
+							"host": [
+								"{{apiURL}}primetrust"
+							],
+							"path": [
+								"liquidity"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[PrimeTrust] Liquidity Sell",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"action\": \"sell\",\n  \"accountId\": {{PT_account_id}},\n  \"amount\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}primetrust/liquidity",
+							"host": [
+								"{{apiURL}}primetrust"
+							],
+							"path": [
+								"liquidity"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[Exchange]",
+			"item": [
+				{
+					"name": "[Exchange] Rate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}exchange/rate",
+							"host": [
+								"{{apiURL}}exchange"
+							],
+							"path": [
+								"rate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Exchange] Convert",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}exchange/convert?from=USD&to=RUB&amount=1",
+							"host": [
+								"{{apiURL}}exchange"
+							],
+							"path": [
+								"convert"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "USD"
+								},
+								{
+									"key": "to",
+									"value": "RUB"
+								},
+								{
+									"key": "amount",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[Rewards]",
+			"item": [
+				{
+					"name": "[Rewards] Get Rewards Activity",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}rewards/{{SenderID}}?limit=2&last_key=jc_0fdcaf9d-7308-45be-b1bd-d548c781ac25",
+							"host": [
+								"{{apiURL}}rewards"
+							],
+							"path": [
+								"{{SenderID}}"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "2"
+								},
+								{
+									"key": "last_key",
+									"value": "jc_0fdcaf9d-7308-45be-b1bd-d548c781ac25"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[Dashboard]",
+			"item": [
+				{
+					"name": "[Dashboard]",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}dashboard/{{UserID}}",
+							"host": [
+								"{{apiURL}}dashboard"
+							],
+							"path": [
+								"{{UserID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Dashboard] Get Daily Stats",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}dashboard/users/daily",
+							"host": [
+								"{{apiURL}}dashboard"
+							],
+							"path": [
+								"users",
+								"daily"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Dashboard] Get Active Users Count",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}dashboard/users/active",
+							"host": [
+								"{{apiURL}}dashboard"
+							],
+							"path": [
+								"users",
+								"active"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Dashboard] Get Total Users Count",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}dashboard/users/total",
+							"host": [
+								"{{apiURL}}dashboard"
+							],
+							"path": [
+								"users",
+								"total"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Activity",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response UserID is equal to UserID from variables\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.objects[0].user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{apiURL}}activity/{{UserID}}?limit=5",
+					"host": [
+						"{{apiURL}}activity"
+					],
+					"path": [
+						"{{UserID}}"
+					],
+					"query": [
+						{
+							"key": "last_key",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "limit",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "J2U6Zgg8Og3WEHv14oZOxKAwycPOyq28sV6kPGW0",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "x-api-key",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "apiURL",
+			"value": "https://api.dev.jawudi.net/api/v1/",
+			"type": "string"
+		},
+		{
+			"key": "phone_number",
+			"value": "+17735723264",
+			"type": "string"
+		},
+		{
+			"key": "phone_number2",
+			"value": "+19862028392",
+			"type": "string"
+		},
+		{
+			"key": "account_id",
+			"value": "GCD25T4ZQ5GJY5Y6DLL4LKX3SSLPW2XWHJCXKRSSJM57ONLLMPARRP3E",
+			"type": "string"
+		},
+		{
+			"key": "request_id",
+			"value": "co_107d7e1d-4bc8-4389-b5b9-310869d6a70e",
+			"type": "string"
+		},
+		{
+			"key": "UserID",
+			"value": "64340841da756466c0d21531",
+			"type": "string"
+		},
+		{
+			"key": "SenderID",
+			"value": "642fc25ada756466c0d1fb30",
+			"type": "string"
+		},
+		{
+			"key": "recipient_phone_number",
+			"value": "+17735723264"
+		},
+		{
+			"key": "recipient_phone_number2",
+			"value": "+19862028392",
+			"type": "string"
+		},
+		{
+			"key": "link_token",
+			"value": ""
+		},
+		{
+			"key": "ach_account",
+			"value": "nLg1BkAx66CxGjRRV1WktpwgRJNr87cgjPdWo",
+			"type": "string"
+		},
+		{
+			"key": "card_number",
+			"value": "4205485280254281",
+			"type": "string"
+		},
+		{
+			"key": "cashout_id",
+			"value": ""
+		},
+		{
+			"key": "confirmation_code",
+			"value": ""
+		},
+		{
+			"key": "UniqueNickname",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "UniqueMetadata",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "StartedUserBalance",
+			"value": ""
+		},
+		{
+			"key": "ExpectedUserBalance",
+			"value": ""
+		},
+		{
+			"key": "unique_recipient_first_name",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "unique_recipient_last_name",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "prepaid_account_id",
+			"value": ""
+		},
+		{
+			"key": "DistributorID",
+			"value": "US-5408516488",
+			"type": "string"
+		},
+		{
+			"key": "unique_business_name",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "PresignedDistributorsURL",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "PresignedURL",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "PT_account_id",
+			"value": "26e1aeeb-1e7f-42fa-bbfd-8f82ed9c637d",
+			"type": "string"
+		},
+		{
+			"key": "StartedDistributorPrepaidBalance",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "ExpectedDistributorPrepaidBalance",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "trans_id",
+			"value": "trans_3af943da-2ac9-4796-a5f4-9e294b467195",
+			"type": "string"
+		},
+		{
+			"key": "StartedDistributorBalance",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "ExpectedDistributorBalance",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "UserID2",
+			"value": "6433f768da756466c0411c16",
+			"type": "string"
+		},
+		{
+			"key": "ptName",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
