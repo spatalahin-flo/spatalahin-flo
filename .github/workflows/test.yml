@@ -5,7 +5,7 @@ on:
 
 jobs:
   test1:
-    name: Run Backend API Validation Tests#1
+    name: Cashout Request API Tests
     if: always()
     runs-on: ubuntu-latest
     strategy:
@@ -26,11 +26,11 @@ jobs:
           npm install -g newman@5.3.2
 
       - name: Run Newman Positive Tests on Postman Collections
-        run: newman run ./tests/123.json
+        run: newman run ./tests/Cashout Request Flow.json
         
   test2:
     needs: test1
-    name: Run Backend API Validation Tests#2
+    name: Load Wallet API Tests
     if: always()
     runs-on: ubuntu-latest
     strategy:
@@ -51,4 +51,179 @@ jobs:
           npm install -g newman@5.3.2
 
       - name: Run Newman Positive Tests on Postman Collections
-        run: newman run ./tests/456.json
+        run: newman run ./tests/Load Wallet Flow.json
+
+  test3:
+    needs: test2
+    name: Transaction Cashout API Tests
+    if: always()
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Packages
+        run: |
+          npm install -g newman@5.3.2
+
+      - name: Run Newman Positive Tests on Postman Collections
+        run: newman run ./tests/Transaction Cashout via ACH Flow.json
+        
+  test4:
+    needs: test3
+    name: Transaction Deposit API Tests
+    if: always()
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Packages
+        run: |
+          npm install -g newman@5.3.2
+
+      - name: Run Newman Positive Tests on Postman Collections
+        run: newman run ./tests/Transaction Deposit via ACH Flow.json
+
+  test5:
+    needs: test4
+    name: Transaction Payment API Tests
+    if: always()
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Packages
+        run: |
+          npm install -g newman@5.3.2
+
+      - name: Run Newman Positive Tests on Postman Collections
+        run: newman run ./tests/Transaction Payment Flow.json
+
+  test6:
+    needs: test5
+    name: Transaction Payment ACH API Tests
+    if: always()
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Packages
+        run: |
+          npm install -g newman@5.3.2
+
+      - name: Run Newman Positive Tests on Postman Collections
+        run: newman run ./tests/Transaction Payment via ACH Flow.json
+
+  test7:
+    needs: test6
+    name: Transaction Transfer API Tests
+    if: always()
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Packages
+        run: |
+          npm install -g newman@5.3.2
+
+      - name: Run Newman Positive Tests on Postman Collections
+        run: newman run ./tests/Transaction Transfer Flow.json
+
+  test8:
+    needs: test7
+    name: Transaction Transfer#2 API Tests
+    if: always()
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Packages
+        run: |
+          npm install -g newman@5.3.2
+
+      - name: Run Newman Positive Tests on Postman Collections
+        run: newman run ./tests/Transaction Transfer Flow#2.json
+
+  test9:
+    needs: test8
+    name: Positive API Tests
+    if: always()
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Packages
+        run: |
+          npm install -g newman@5.3.2
+
+      - name: Run Newman Positive Tests on Postman Collections
+        run: newman run ./tests/Positive Flow.json
