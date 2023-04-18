@@ -6,7 +6,7 @@ on:
 jobs:
   test1:
     name: Cashout Request API Tests
-    if: always()
+    if: ${{ ! cancelled() }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -31,7 +31,7 @@ jobs:
   test2:
     needs: test1
     name: Load Wallet API Tests
-    if: always()
+    if: ${{ ! cancelled() }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -56,7 +56,7 @@ jobs:
   test3:
     needs: test2
     name: Transaction Cashout API Tests
-    if: always()
+    if: ${{ ! cancelled() }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -81,7 +81,7 @@ jobs:
   test4:
     needs: test3
     name: Transaction Deposit API Tests
-    if: always()
+    if: ${{ ! cancelled() }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -106,7 +106,7 @@ jobs:
   test5:
     needs: test4
     name: Transaction Payment API Tests
-    if: always()
+    if: ${{ ! cancelled() }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -131,7 +131,7 @@ jobs:
   test6:
     needs: test5
     name: Transaction Payment ACH API Tests
-    if: always()
+    if: ${{ ! cancelled() }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -156,7 +156,7 @@ jobs:
   test7:
     needs: test6
     name: Transaction Transfer API Tests
-    if: always()
+    if: ${{ ! cancelled() }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -181,7 +181,7 @@ jobs:
   test8:
     needs: test7
     name: Transaction Transfer#2 API Tests
-    if: always()
+    if: ${{ ! cancelled() }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -206,7 +206,7 @@ jobs:
   test9:
     needs: test8
     name: Positive API Tests
-    if: always()
+    if: ${{ ! cancelled() }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
