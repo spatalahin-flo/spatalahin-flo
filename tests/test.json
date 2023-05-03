@@ -1,0 +1,515 @@
+{
+	"info": {
+		"_postman_id": "e08ff512-8109-4893-9aa2-b8509e709e31",
+		"name": "Transaction Payment Flow",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15182028",
+		"_collection_link": "https://grey-shadow-812898.postman.co/workspace/Jawudi-Auto-Tests~219cbc1b-3674-40bd-b25c-74d61c0a8e8c/collection/15182028-e08ff512-8109-4893-9aa2-b8509e709e31?action=share&creator=15182028&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Payment",
+			"item": [
+				{
+					"name": "[Transaction] Get User Balance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"UserId is the same\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.collectionVariables.set(\"account_id\", jsonData.account_id);",
+									"",
+									"pm.collectionVariables.set(\"StartedUserBalance\", jsonData.balance);",
+									"pm.collectionVariables.set(\"ExpectedUserBalance\", parseFloat(pm.collectionVariables.get(\"StartedUserBalance\")) + 2);",
+									"",
+									"pm.collectionVariables.set('helper', function loadhelper() {",
+									"\tconst helper = {};",
+									"\tconst response = pm.response.json();",
+									"",
+									"    function throwCustomError(name) {",
+									"\t\t    pm.test(name, () => {",
+									"\t\t\t\tthrow new Error('');",
+									"\t\t\t});",
+									"            postman.setNextRequest(null)",
+									"        }",
+									"",
+									"    function getCorrectNumber(num){",
+									"            return num.toString().match(/^-?\\d+(?:\\.\\d{0,2})?/)[0]",
+									"        }",
+									"",
+									"\tfunction retry(maxRetries, sleep) {",
+									"\t\tlet retries = pm.collectionVariables.get('retries') || 0;",
+									"\t\tconsole.warn('retries used ' + retries + ' of ' + maxRetries);",
+									"",
+									"\t\tsetTimeout(function() {",
+									"\t\t}, sleep);",
+									"",
+									"\t\tif (retries >= maxRetries) {",
+									"\t\t\t// Reset variable",
+									"\t\t\tpm.collectionVariables.set('retries', 0);",
+									"\t\t\tconsole.warn('Reset retries. Failed after ' + retries);",
+									"            throwCustomError('The maximum number of attempts has been reached')",
+									"            return",
+									"\t\t}",
+									"",
+									"\t\tpostman.setNextRequest(pm.info.requestName);",
+									"\t\tpm.collectionVariables.set('retries', ++retries);",
+									"\t\tconsole.warn('Increase retries  ' + retries);",
+									"\t}",
+									"",
+									"\thelper.retryStatusCheck = (maxRetries, sleep = 200) => {",
+									"\t\tconst transactionActivity = response.objects.find(element => {",
+									"\t\t\treturn element.trans_id === pm.collectionVariables.get('trans_id');",
+									"\t\t});",
+									"",
+									"\t\tconst status = transactionActivity?.status",
+									"",
+									"\t\tif (status === 'COMPLETED') {",
+									"\t\t\tconsole.warn('Reset retries on request Success ' + pm.collectionVariables.get('retries'));",
+									"\t\t\tpm.collectionVariables.set('retries', 0);",
+									"\t\t\treturn;",
+									"\t\t}",
+									"",
+									"        if (status === 'FAILED') {",
+									"\t\t\tthrowCustomError('Payment is FAILED')",
+									"            return",
+									"        }",
+									"",
+									"\t\tretry(maxRetries, sleep);",
+									"\t};",
+									"",
+									"",
+									"\thelper.retryUserBalanceCheck = (maxRetries, sleep = 200) => {",
+									"",
+									"\t\tconst isEqual = parseFloat(getCorrectNumber(response.balance)) === parseFloat(getCorrectNumber(pm.collectionVariables.get('ExpectedUserBalance')))",
+									"        const isDifferentUserBalance = parseFloat(getCorrectNumber(response.balance)) != parseFloat(getCorrectNumber(pm.collectionVariables.get('StartedUserBalance')))",
+									"",
+									"\t\tif (isEqual) {",
+									"\t\t\tconsole.warn('Reset retries on request Success ' + pm.collectionVariables.get('retries'));",
+									"\t\t\tpm.collectionVariables.set('retries', 0);",
+									"\t\t\treturn;",
+									"\t\t}",
+									"",
+									"        if (isDifferentUserBalance) {",
+									"\t\t\tpm.collectionVariables.set('retries', 0);",
+									"            throwCustomError('The expected value differs from the actual value')",
+									"            return",
+									"\t\t}",
+									"",
+									"\t\tretry(maxRetries, sleep);",
+									"\t};",
+									"",
+									"\thelper.retrySenderBalanceCheck = (maxRetries, sleep = 200) => {",
+									"        ",
+									"\t\tconst isEqual = parseFloat(getCorrectNumber(response.balance)) === parseFloat(getCorrectNumber(pm.collectionVariables.get('ExpectedSenderBalance')))",
+									"        const isDifferentSenderBalance = parseFloat(getCorrectNumber(response.balance)) != parseFloat(getCorrectNumber(pm.collectionVariables.get('StartedSenderBalance')))",
+									"",
+									"\t\tif (isEqual) {",
+									"\t\t\tconsole.warn('Reset retries on request Success ' + pm.collectionVariables.get('retries'));",
+									"\t\t\tpm.collectionVariables.set('retries', 0);",
+									"            return;",
+									"\t\t}",
+									"",
+									"        if (isDifferentSenderBalance) {",
+									"\t\t\tpm.collectionVariables.set('retries', 0);",
+									"            throwCustomError('The expected value differs from the actual value')",
+									"            return",
+									"\t\t}",
+									"",
+									"\t\tretry(maxRetries, sleep);",
+									"\t};",
+									"",
+									"\treturn helper;",
+									"} + '; loadhelper();');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiURL}}accounts?user_id={{UserID}}",
+							"host": [
+								"{{apiURL}}accounts"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "{{UserID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Transaction] Get Sender Balance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"UserId is the same\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"SenderID\"));",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.collectionVariables.set(\"account_id\", jsonData.account_id);",
+									"",
+									"pm.collectionVariables.set(\"StartedSenderBalance\", jsonData.balance);",
+									"pm.collectionVariables.set(\"ExpectedSenderBalance\", parseFloat(pm.collectionVariables.get(\"StartedSenderBalance\")) - 2);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiURL}}accounts?user_id={{SenderID}}",
+							"host": [
+								"{{apiURL}}accounts"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "{{SenderID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Transaction] Payment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Fees and total_amount has correct data in response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.fees_details.amount).to.eql(0)",
+									"    pm.expect(jsonData.payment_details.total_amount).to.eql(2)",
+									"});",
+									"",
+									"pm.collectionVariables.set(\"trans_id\", jsonData.trans_id);",
+									"",
+									"console.log(jsonData.trans_id)",
+									"",
+									"setTimeout(function(){}, [15000]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"trans_type\": \"PAYMENT\",\n    \"fees_details\": {\n        \"amount\": 1,\n        \"currency_code\": \"USD\",\n        \"exchange_rate\": 1\n    },\n    \"payment_details\": {\n        \"user_id\": \"{{SenderID}}\",\n        \"merchant_id\": \"{{UserID}}\",\n        \"user_fullname\": \"string\",\n        \"amount_paid\": 2,\n        \"amount_received\": 2,\n        \"total_amount\": 3,\n        \"user_currency_code\": \"USD\",\n        \"user_country_code\": \"US\",\n        \"merchant_name\": \"string\",\n        \"merchant_currency_code\": \"USD\",\n        \"merchant_country_code\": \"US\",\n        \"exchange_rate\": 1,\n        \"payment_method_details\": {\n            \"payment_name\": \"string\",\n            \"payment_type\": \"JAWUDI\",\n            \"payment_id\": \"{{account_id}}\",\n            \"payment_mask\": \"string\"\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}transactions",
+							"host": [
+								"{{apiURL}}transactions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Transaction] Get Transaction Activity and Check status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const helper = eval(pm.collectionVariables.get(\"helper\"));",
+									"pm.test(\"Get Status of Payment Transaction\", helper.retryStatusCheck(10, 20000));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiURL}}activity/{{SenderID}}?limit=100",
+							"host": [
+								"{{apiURL}}activity"
+							],
+							"path": [
+								"{{SenderID}}"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Transaction] Get User Balance After Payment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const helper = eval(pm.collectionVariables.get(\"helper\"));",
+									"pm.test(\"Get User Balance after Transfer\", helper.retryUserBalanceCheck(10, 20000));",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiURL}}accounts?user_id={{UserID}}",
+							"host": [
+								"{{apiURL}}accounts"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "{{UserID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Transaction] Get Sender Balance After Payment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const helper = eval(pm.collectionVariables.get(\"helper\"));",
+									"pm.test(\"Get Sender Balance after Transfer\", helper.retrySenderBalanceCheck(10, 20000));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiURL}}accounts?user_id={{SenderID}}",
+							"host": [
+								"{{apiURL}}accounts"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "{{SenderID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{id_token}} admin",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.request.headers.add({ key: 'x-api-key', value: pm.collectionVariables.get(\"x-api-key\") });"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "apiURL",
+			"value": "https://api.dev.jawudi.net/api/v1/",
+			"type": "string"
+		},
+		{
+			"key": "account_id",
+			"value": "GCD25T4ZQ5GJY5Y6DLL4LKX3SSLPW2XWHJCXKRSSJM57ONLLMPARRP3E",
+			"type": "string"
+		},
+		{
+			"key": "UserID",
+			"value": "6433f768da756466c0411c16",
+			"type": "string"
+		},
+		{
+			"key": "SenderID",
+			"value": "642fc25ada756466c0d1fb30",
+			"type": "string"
+		},
+		{
+			"key": "link_token",
+			"value": ""
+		},
+		{
+			"key": "ach_account",
+			"value": "8GLJnBWAlJHr8z9pXdzaTJXJRrwdbltZAmpD4",
+			"type": "string"
+		},
+		{
+			"key": "card_number",
+			"value": "4205485280254281",
+			"type": "string"
+		},
+		{
+			"key": "cashout_id",
+			"value": ""
+		},
+		{
+			"key": "confirmation_code",
+			"value": ""
+		},
+		{
+			"key": "StartedUserBalance",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "StartedSenderBalance",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "ExpectedUserBalance",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "ExpectedSenderBalance",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "trans_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "retries",
+			"value": "0",
+			"type": "string"
+		},
+		{
+			"key": "helper",
+			"value": ""
+		},
+		{
+			"key": "id_token",
+			"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Inh3SE14MmdOcWs3Nm9VSy1aMG1nYiJ9.eyJnaXZlbl9uYW1lIjoiQXV0byIsImZhbWlseV9uYW1lIjoiVGVzdDEiLCJuaWNrbmFtZSI6Ik9mdUdpR3AiLCJuYW1lIjoiKzE3NzM1NzIzMjY0IiwicGljdHVyZSI6Imh0dHBzOi8vY2RuLmF1dGgwLmNvbS9hdmF0YXJzL2RlZmF1bHQucG5nIiwidXBkYXRlZF9hdCI6IjIwMjMtMDQtMTlUMDk6Mzc6NTkuODQ1WiIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicGhvbmVfbnVtYmVyIjoiKzE3NzM1NzIzMjY0IiwiaXNzIjoiaHR0cHM6Ly9qYXd1ZGktZGV2LnVzLmF1dGgwLmNvbS8iLCJhdWQiOiJ6UlF0TVdITTB6NVF0MVRyR0tDUmhCeXFiT3I2cWtpRiIsImlhdCI6MTY4MTg5NzA3OSwiZXhwIjoxNjgxOTMzMDc5LCJzdWIiOiJzbXN8NjQzNDA4NDFkYTc1NjQ2NmMwZDIxNTMxIn0.qWtobQnU7XuHk1xLJ4_gaBrLTvuPmSEMuw6s7jJIAC3vQrSMLgtjUiEqpPKOdZ1mSqMVP57mZElWWl04Knf_213U0sd3lIaEb4aLi5izNrBGUV7XpP7PAPn6Ch5pbGkzczND2tEFfBv2TluDn2FxHnz6oqMjL4luvQDwn9W9fhreZO9Cm7JIBQFXwqHH9PLo3JM_rV92xjpv2taG4rDMy-xUGyZ0VeiPxTknZz9xfyxCgMnCbruD1YadQOEQiul3mXXcyTQFDZU42urnzJDsNHoNG8WEgnbG7V-EVHGeQ-F9RSy9HD3vVxx3j_GH1TNrnHYF6sCslxcqXh5esFMcRA",
+			"type": "string"
+		},
+		{
+			"key": "x-api-key",
+			"value": "J2U6Zgg8Og3WEHv14oZOxKAwycPOyq28sV6kPGW0",
+			"type": "string"
+		}
+	]
+}
