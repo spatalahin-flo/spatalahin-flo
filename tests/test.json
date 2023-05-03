@@ -1,17 +1,17 @@
 {
 	"info": {
-		"_postman_id": "e08ff512-8109-4893-9aa2-b8509e709e31",
-		"name": "Transaction Payment Flow",
+		"_postman_id": "95336d27-fbed-41df-989d-a605d1116172",
+		"name": "Transaction Deposit via ACH Flow",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "15182028",
-		"_collection_link": "https://grey-shadow-812898.postman.co/workspace/Jawudi-Auto-Tests~219cbc1b-3674-40bd-b25c-74d61c0a8e8c/collection/15182028-e08ff512-8109-4893-9aa2-b8509e709e31?action=share&creator=15182028&source=collection_link"
+		"_collection_link": "https://grey-shadow-812898.postman.co/workspace/Jawudi-Auto-Tests~219cbc1b-3674-40bd-b25c-74d61c0a8e8c/collection/15182028-95336d27-fbed-41df-989d-a605d1116172?action=share&creator=15182028&source=collection_link"
 	},
 	"item": [
 		{
-			"name": "Payment",
+			"name": "Deposit via ACH",
 			"item": [
 				{
-					"name": "[Transaction] Get User Balance",
+					"name": "[Transaction] Get Sender Balance",
 					"event": [
 						{
 							"listen": "test",
@@ -23,15 +23,15 @@
 									"",
 									"pm.test(\"UserId is the same\", function () {",
 									"    var jsonData = pm.response.json();",
-									"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"UserID\"));",
+									"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"SenderID\"));",
 									"});",
 									"",
 									"var jsonData = JSON.parse(responseBody);",
 									"",
 									"pm.collectionVariables.set(\"account_id\", jsonData.account_id);",
 									"",
-									"pm.collectionVariables.set(\"StartedUserBalance\", jsonData.balance);",
-									"pm.collectionVariables.set(\"ExpectedUserBalance\", parseFloat(pm.collectionVariables.get(\"StartedUserBalance\")) + 2);",
+									"pm.collectionVariables.set(\"StartedSenderBalance\", jsonData.balance);",
+									"pm.collectionVariables.set(\"ExpectedSenderBalance\", parseFloat(pm.collectionVariables.get(\"StartedSenderBalance\")) + 3);",
 									"",
 									"pm.collectionVariables.set('helper', function loadhelper() {",
 									"\tconst helper = {};",
@@ -82,29 +82,8 @@
 									"\t\t}",
 									"",
 									"        if (status === 'FAILED') {",
-									"\t\t\tthrowCustomError('Payment is FAILED')",
-									"            return",
-									"        }",
-									"",
-									"\t\tretry(maxRetries, sleep);",
-									"\t};",
-									"",
-									"",
-									"\thelper.retryUserBalanceCheck = (maxRetries, sleep = 200) => {",
-									"",
-									"\t\tconst isEqual = parseFloat(getCorrectNumber(response.balance)) === parseFloat(getCorrectNumber(pm.collectionVariables.get('ExpectedUserBalance')))",
-									"        const isDifferentUserBalance = parseFloat(getCorrectNumber(response.balance)) != parseFloat(getCorrectNumber(pm.collectionVariables.get('StartedUserBalance')))",
-									"",
-									"\t\tif (isEqual) {",
-									"\t\t\tconsole.warn('Reset retries on request Success ' + pm.collectionVariables.get('retries'));",
-									"\t\t\tpm.collectionVariables.set('retries', 0);",
-									"\t\t\treturn;",
-									"\t\t}",
-									"",
-									"        if (isDifferentUserBalance) {",
-									"\t\t\tpm.collectionVariables.set('retries', 0);",
-									"            throwCustomError('The expected value differs from the actual value')",
-									"            return",
+									"\t\t\tthrowCustomError('Deposit via ACH is FAILED')",
+									"\t\t\treturn",
 									"\t\t}",
 									"",
 									"\t\tretry(maxRetries, sleep);",
@@ -148,58 +127,6 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{apiURL}}accounts?user_id={{UserID}}",
-							"host": [
-								"{{apiURL}}accounts"
-							],
-							"query": [
-								{
-									"key": "user_id",
-									"value": "{{UserID}}"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[Transaction] Get Sender Balance",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"pm.test(\"UserId is the same\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    pm.expect(jsonData.user_id).to.eql(pm.collectionVariables.get(\"SenderID\"));",
-									"});",
-									"",
-									"var jsonData = JSON.parse(responseBody);",
-									"",
-									"pm.collectionVariables.set(\"account_id\", jsonData.account_id);",
-									"",
-									"pm.collectionVariables.set(\"StartedSenderBalance\", jsonData.balance);",
-									"pm.collectionVariables.set(\"ExpectedSenderBalance\", parseFloat(pm.collectionVariables.get(\"StartedSenderBalance\")) - 2);"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
 							"raw": "{{apiURL}}accounts?user_id={{SenderID}}",
 							"host": [
 								"{{apiURL}}accounts"
@@ -215,7 +142,7 @@
 					"response": []
 				},
 				{
-					"name": "[Transaction] Payment",
+					"name": "[Transaction] Deposit",
 					"event": [
 						{
 							"listen": "test",
@@ -229,13 +156,13 @@
 									"",
 									"pm.test(\"Fees and total_amount has correct data in response\", function () {",
 									"    var jsonData = pm.response.json();",
-									"    pm.expect(jsonData.fees_details.amount).to.eql(0)",
-									"    pm.expect(jsonData.payment_details.total_amount).to.eql(2)",
+									"    pm.expect(jsonData.fees_details.amount).to.eql(0.5)",
+									"    pm.expect(jsonData.deposit_details.total_amount).to.eql(3.5)",
 									"});",
 									"",
 									"pm.collectionVariables.set(\"trans_id\", jsonData.trans_id);",
-									"",
 									"console.log(jsonData.trans_id)",
+									"",
 									"",
 									"setTimeout(function(){}, [15000]);"
 								],
@@ -248,7 +175,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"trans_type\": \"PAYMENT\",\n    \"fees_details\": {\n        \"amount\": 1,\n        \"currency_code\": \"USD\",\n        \"exchange_rate\": 1\n    },\n    \"payment_details\": {\n        \"user_id\": \"{{SenderID}}\",\n        \"merchant_id\": \"{{UserID}}\",\n        \"user_fullname\": \"string\",\n        \"amount_paid\": 2,\n        \"amount_received\": 2,\n        \"total_amount\": 3,\n        \"user_currency_code\": \"USD\",\n        \"user_country_code\": \"US\",\n        \"merchant_name\": \"string\",\n        \"merchant_currency_code\": \"USD\",\n        \"merchant_country_code\": \"US\",\n        \"exchange_rate\": 1,\n        \"payment_method_details\": {\n            \"payment_name\": \"string\",\n            \"payment_type\": \"JAWUDI\",\n            \"payment_id\": \"{{account_id}}\",\n            \"payment_mask\": \"string\"\n        }\n    }\n}",
+							"raw": "{\n    \"trans_type\": \"DEPOSIT\",\n    \"fees_details\": {\n        \"amount\": 0.01,\n        \"currency_code\": \"USD\",\n        \"exchange_rate\": 1\n    },\n    \"deposit_details\": {\n        \"user_id\": \"{{SenderID}}\",\n        \"deposit_delivery\": \"STANDARD\",\n        \"deposit_amount\": 3,\n        \"total_amount\": 3.01,\n        \"country_code\": \"US\",\n        \"currency_code\": \"USD\",\n        \"funding_account_mask\": \"string\",\n        \"funding_account_type\": \"ACH\",\n        \"funding_account_id\": \"{{ach_account}}\",\n        \"funding_account_name\": \"string\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -276,7 +203,7 @@
 									"});",
 									"",
 									"const helper = eval(pm.collectionVariables.get(\"helper\"));",
-									"pm.test(\"Get Status of Payment Transaction\", helper.retryStatusCheck(10, 20000));"
+									"pm.test(\"Get Status of Transfer Deposit with ACH\", helper.retryStatusCheck(10, 25000));"
 								],
 								"type": "text/javascript"
 							}
@@ -304,7 +231,7 @@
 					"response": []
 				},
 				{
-					"name": "[Transaction] Get User Balance After Payment",
+					"name": "[Transaction] Get Sender Balance After Deposit ACH",
 					"event": [
 						{
 							"listen": "test",
@@ -315,52 +242,7 @@
 									"});",
 									"",
 									"const helper = eval(pm.collectionVariables.get(\"helper\"));",
-									"pm.test(\"Get User Balance after Transfer\", helper.retryUserBalanceCheck(10, 20000));",
-									"",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{apiURL}}accounts?user_id={{UserID}}",
-							"host": [
-								"{{apiURL}}accounts"
-							],
-							"query": [
-								{
-									"key": "user_id",
-									"value": "{{UserID}}"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[Transaction] Get Sender Balance After Payment",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"const helper = eval(pm.collectionVariables.get(\"helper\"));",
-									"pm.test(\"Get Sender Balance after Transfer\", helper.retrySenderBalanceCheck(10, 20000));"
+									"pm.test(\"Get User Balance after Deposit via ACH\", helper.retrySenderBalanceCheck(10, 20000));"
 								],
 								"type": "text/javascript"
 							}
